@@ -27,18 +27,21 @@ jobs:
           HELIOS_ORACLE_MODEL: gemini-2.5-flash-lite
           PYTHONUTF8: 1
         run: |
-          # For the hackathon demo, we evaluate config_a.yaml to trigger a BLOCK
-          python cli/helios.py evaluate demo/config_a.yaml --local > helios_output.txt 2>&1 || exit_code=$?
+          # Evaluate config and export raw JSON
+          python cli/helios.py evaluate demo/config_a.yaml --local --json > raw_result.json 2>&1 || exit_code=$?
           
           echo "exit_code=${exit_code:-0}" >> $GITHUB_OUTPUT
           
-          # Print to the GitHub Action logs
-          cat helios_output.txt
+          # Convert JSON output into professional markdown
+          python scripts/format_pr_comment.py raw_result.json > comment_body.md
           
-          # Format the output to pass to the comment step
+          # Print for action logs
+          cat comment_body.md
+          
+          # Format output for the comment step
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "report<<$EOF" >> $GITHUB_OUTPUT
-          cat helios_output.txt >> $GITHUB_OUTPUT
+          cat comment_body.md >> $GITHUB_OUTPUT
           echo "$EOF" >> $GITHUB_OUTPUT
           
       - name: Post HELIOS Report to PR
@@ -46,13 +49,12 @@ jobs:
         with:
           script: |
             const report = `${{ steps.helios_run.outputs.report }}`;
-            const body = `### 🛡️ HELIOS Config Safety Analysis\n\n\`\`\`text\n${report}\n\`\`\``;
             
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: body
+              body: report
             })
             
       - name: Enforce HELIOS Verdict
