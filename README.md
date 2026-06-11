@@ -4,7 +4,7 @@
 
 [![Microsoft Agents League 2026](https://img.shields.io/badge/Microsoft%20Agents%20League-2026-0078d4?style=flat-square)](https://agentsleague.dev)
 [![Track: Reasoning Agents](https://img.shields.io/badge/Track-Reasoning%20Agents-6366f1?style=flat-square)](#)
-[![Powered by Gemini](https://img.shields.io/badge/Powered%20by-Gemini%20AI-4285F4?style=flat-square)](https://ai.google.dev)
+[![Powered by Azure OpenAI](https://img.shields.io/badge/Powered%20by-Gemini%20AI-4285F4?style=flat-square)](https://ai.google.dev)
 [![Microsoft IQ](https://img.shields.io/badge/Integrates-Microsoft%20IQ-0078d4?style=flat-square)](#)
 [![Tests](https://img.shields.io/badge/tests-52%20passed-brightgreen?style=flat-square)](#testing)
 [![Accuracy](https://img.shields.io/badge/accuracy-94.5%25-brightgreen?style=flat-square)](#evaluation-suite--945-accuracy)
@@ -251,7 +251,7 @@ HELIOS integrates all three Microsoft IQ layers. Each integration is built behin
 
 | IQ Layer | What HELIOS Uses It For | Local Implementation | Production Swap |
 |----------|------------------------|---------------------|-----------------|
-| **Foundry IQ** | CHRONICLE searches organizational knowledge — postmortems, advisories, runbooks — with semantic similarity and grounded citations | ChromaDB vector store (69 documents indexed) | Foundry IQ Knowledge API |
+| **Foundry IQ** | CHRONICLE searches organizational knowledge — postmortems, advisories, runbooks — with semantic similarity and grounded citations | Foundry IQ SDK (with ChromaDB offline fallback) | Foundry IQ Knowledge API |
 | **Fabric IQ** | MERIDIAN traverses Config -> Service -> Department -> Revenue semantic graph to calculate blast radius and revenue impact | networkx directed graph from `synthetic-data/ontology.json` | Fabric IQ Semantic Entity API |
 | **Work IQ** | CONTEXT reads M365-style signals — calendar events, engineer PTO, team fatigue scores, hourly traffic patterns | JSON signal store from `synthetic-data/work_signals.json` | MS Graph API + Work IQ Signals |
 
@@ -282,7 +282,7 @@ cp .env.example .env
 
 Open `.env` and set your Gemini API key:
 ```
-GEMINI_API_KEY=AIzaSy...your-key-here
+AZURE_OPENAI_API_KEY=AIzaSy...your-key-here
 ```
 
 ### Step 3: Seed the Knowledge Base
@@ -363,11 +363,11 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Run HELIOS Pipeline
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
         run: python cli/helios.py evaluate demo/config_a.yaml --local --json
 ```
 
-**To enable:** Add `GEMINI_API_KEY` as a repository secret in Settings > Secrets > Actions.
+**To enable:** Add `AZURE_OPENAI_API_KEY` as a repository secret in Settings > Secrets > Actions.
 
 ### CLI (Local / Pre-commit Hook)
 

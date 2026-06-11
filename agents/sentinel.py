@@ -24,7 +24,7 @@ async def _call_with_retry(client, model, contents, system_instruction, max_retr
                 raise
 
 async def run(request: EvaluationRequest) -> SentinelReport:
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
     model = os.getenv("HELIOS_REASONING_MODEL", "gemini-2.5-flash")
     
     content = request.get_content()

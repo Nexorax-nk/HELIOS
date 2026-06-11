@@ -9,7 +9,7 @@ from agents.models import EvaluationRequest, SentinelReport
 logger = logging.getLogger(__name__)
 
 async def run(request: EvaluationRequest) -> SentinelReport:
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
     model = os.getenv("HELIOS_REASONING_MODEL", "gemini-2.5-flash")
     msg = f"Config File: {request.config_file}\\nContent: {request.new_content}"
     response = await client.aio.models.generate_content(model=model, contents=msg,
@@ -39,7 +39,7 @@ from integrations import foundry_iq
 logger = logging.getLogger(__name__)
 
 async def run(sentinel: SentinelReport) -> ChronicleReport:
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
     model = os.getenv("HELIOS_REASONING_MODEL", "gemini-2.5-flash")
     top_evidence = foundry_iq.search_knowledge_base(sentinel.parameter, k=5)
     response = await client.aio.models.generate_content(model=model, contents="analyze",
@@ -64,7 +64,7 @@ from integrations import fabric_iq
 logger = logging.getLogger(__name__)
 
 async def run(sentinel: SentinelReport) -> MeridianReport:
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
     model = os.getenv("HELIOS_REASONING_MODEL", "gemini-2.5-flash")
     blast_data = fabric_iq.get_blast_radius(sentinel.config_file)
     response = await client.aio.models.generate_content(model=model, contents="analyze",
@@ -88,7 +88,7 @@ from agents.models import EvaluationRequest, SentinelReport, ContextReport
 logger = logging.getLogger(__name__)
 
 async def run(request: EvaluationRequest, sentinel: SentinelReport) -> ContextReport:
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
     model = os.getenv("HELIOS_REASONING_MODEL", "gemini-2.5-flash")
     response = await client.aio.models.generate_content(model=model, contents="analyze",
         config=types.GenerateContentConfig(
@@ -110,7 +110,7 @@ from agents.models import SentinelReport, ChronicleReport, MeridianReport, Conte
 logger = logging.getLogger(__name__)
 
 async def run(sentinel: SentinelReport, chronicle: ChronicleReport, meridian: MeridianReport, context: ContextReport) -> OracleReport:
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
     model = os.getenv("HELIOS_REASONING_MODEL", "gemini-2.5-flash")
     response = await client.aio.models.generate_content(model=model, contents="analyze",
         config=types.GenerateContentConfig(
@@ -132,7 +132,7 @@ from agents.models import EvaluationRequest, SentinelReport, ChronicleReport, Me
 logger = logging.getLogger(__name__)
 
 async def run(request: EvaluationRequest, sentinel: SentinelReport, chronicle: ChronicleReport, meridian: MeridianReport, context: ContextReport, oracle: OracleReport) -> ArbiterVerdict:
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
     model = os.getenv("HELIOS_REASONING_MODEL", "gemini-2.5-flash")
     response = await client.aio.models.generate_content(model=model, contents="analyze",
         config=types.GenerateContentConfig(

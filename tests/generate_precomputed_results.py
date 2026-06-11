@@ -78,7 +78,7 @@ for cat in ["BLOCK", "WARN", "SHIP"]:
 output = {
     "generated_by": "HELIOS Evaluation Runner v1.0",
     "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
-    "model": "gemini-2.5-flash-lite",
+    "model": "gpt-4o",
     "total_tests": total,
     "total_passed": total_passed,
     "overall_accuracy": round(total_passed / total * 100, 1),

@@ -22,9 +22,9 @@ jobs:
       - name: Run HELIOS Pipeline
         id: helios_run
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          HELIOS_REASONING_MODEL: gemini-2.5-flash-lite
-          HELIOS_ORACLE_MODEL: gemini-2.5-flash-lite
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          HELIOS_REASONING_MODEL: gpt-4o
+          HELIOS_ORACLE_MODEL: gpt-4o
           PYTHONUTF8: 1
         run: |
           # Evaluate config and export raw JSON

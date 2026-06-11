@@ -1,7 +1,7 @@
 """
 HELIOS Live Spot-Check Tests — Tier 3
 Runs 3 real evaluations against the Gemini API: 1 BLOCK, 1 WARN, 1 SHIP.
-Requires GEMINI_API_KEY to be set in .env.
+Requires AZURE_OPENAI_API_KEY to be set in .env.
 
     pytest tests/test_live.py -v -m live
 """
@@ -23,9 +23,9 @@ def setup_env():
     from dotenv import load_dotenv
     load_dotenv()
     import os
-    key = os.getenv("GEMINI_API_KEY", "")
+    key = os.getenv("AZURE_OPENAI_API_KEY", "")
     if not key or key.startswith("your-"):
-        pytest.skip("GEMINI_API_KEY not configured — skipping live tests")
+        pytest.skip("AZURE_OPENAI_API_KEY not configured — skipping live tests")
 
 
 class TestLiveSpotCheck:
