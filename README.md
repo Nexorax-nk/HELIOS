@@ -251,7 +251,7 @@ HELIOS integrates all three Microsoft IQ layers. Each integration is built behin
 
 | IQ Layer | What HELIOS Uses It For | Local Implementation | Production Swap |
 |----------|------------------------|---------------------|-----------------|
-| **Foundry IQ** | CHRONICLE searches organizational knowledge — postmortems, advisories, runbooks — with semantic similarity and grounded citations | Foundry IQ SDK (with ChromaDB offline fallback) | Foundry IQ Knowledge API |
+| **Foundry IQ** | CHRONICLE searches organizational knowledge — postmortems, advisories, runbooks — with semantic similarity and grounded citations | Foundry IQ SDK (with ChromaDB offline fallback) | Integrated via azure.ai.projects |
 | **Fabric IQ** | MERIDIAN traverses Config -> Service -> Department -> Revenue semantic graph to calculate blast radius and revenue impact | networkx directed graph from `synthetic-data/ontology.json` | Fabric IQ Semantic Entity API |
 | **Work IQ** | CONTEXT reads M365-style signals — calendar events, engineer PTO, team fatigue scores, hourly traffic patterns | JSON signal store from `synthetic-data/work_signals.json` | MS Graph API + Work IQ Signals |
 
