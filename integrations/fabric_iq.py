@@ -243,3 +243,4 @@ def get_service_by_config(config_file: str) -> Optional[dict]:
             svc_id = successors[0]
             return _services_data.get(svc_id)
     return None
+
