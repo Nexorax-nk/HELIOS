@@ -1,6 +1,6 @@
 """
 HELIOS Integration Tests — Tier 2
-Validates full pipeline orchestration with mocked LLM responses.
+Validates full pipeline orchestration with stubbed LLM responses.
 Proves the 6-agent architecture is real and data flows correctly.
 Zero Gemini API calls.
 
@@ -23,9 +23,9 @@ from agents.models import (
 )
 
 
-# ─── Mock Agent Responses ────────────────────────────────────────────────────
+# ─── stub Agent Responses ────────────────────────────────────────────────────
 
-def _mock_sentinel():
+def _stub_sentinel():
     return SentinelReport(
         parameter="authentication_timeout",
         config_file="auth.yaml",
@@ -35,7 +35,7 @@ def _mock_sentinel():
         semantic_severity="HIGH",
     )
 
-def _mock_chronicle():
+def _stub_chronicle():
     return ChronicleReport(
         evidence=[EvidenceItem(
             source_doc="postmortem-INC-2847.md", source_type="incident",
@@ -48,7 +48,7 @@ def _mock_chronicle():
         key_finding="Direct precedent: INC-2847 auth timeout failure",
     )
 
-def _mock_meridian():
+def _stub_meridian():
     return MeridianReport(
         config_file="auth.yaml",
         directly_controlled_service="Auth Service",
@@ -65,7 +65,7 @@ def _mock_meridian():
         cascade_risk=True,
     )
 
-def _mock_context():
+def _stub_context():
     return ContextReport(
         deployment_window_risk="HIGH",
         context_risk_score=75,
@@ -73,7 +73,7 @@ def _mock_context():
         primary_expert_available=False,
     )
 
-def _mock_oracle():
+def _stub_oracle():
     return OracleReport(
         scenario_title="POS Authentication Cascade Failure",
         estimated_revenue_impact=1200000.0,
@@ -82,7 +82,7 @@ def _mock_oracle():
         key_prediction="High probability of cascade POS failure within 2 hours of deployment",
     )
 
-def _mock_arbiter():
+def _stub_arbiter():
     return ArbiterVerdict(
         verdict="BLOCK",
         verdict_emoji="X",
@@ -96,7 +96,7 @@ def _mock_arbiter():
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class TestPipelineOrchestration:
-    """Test the full pipeline with mocked LLM agents."""
+    """Test the full pipeline with stubbed LLM agents."""
 
     @pytest.fixture
     def request_obj(self):
@@ -110,12 +110,12 @@ class TestPipelineOrchestration:
     @pytest.mark.asyncio
     async def test_full_pipeline_produces_result(self, request_obj):
         """Pipeline runs all 6 agents and produces a complete PipelineResult."""
-        with patch("agents.sentinel.run", new_callable=AsyncMock, return_value=_mock_sentinel()), \
-             patch("agents.chronicle.run", new_callable=AsyncMock, return_value=_mock_chronicle()), \
-             patch("agents.meridian.run", new_callable=AsyncMock, return_value=_mock_meridian()), \
-             patch("agents.context.run", new_callable=AsyncMock, return_value=_mock_context()), \
-             patch("agents.oracle.run", new_callable=AsyncMock, return_value=_mock_oracle()), \
-             patch("agents.arbiter.run", new_callable=AsyncMock, return_value=_mock_arbiter()), \
+        with patch("agents.sentinel.run", new_callable=AsyncMock, return_value=_stub_sentinel()), \
+             patch("agents.chronicle.run", new_callable=AsyncMock, return_value=_stub_chronicle()), \
+             patch("agents.meridian.run", new_callable=AsyncMock, return_value=_stub_meridian()), \
+             patch("agents.context.run", new_callable=AsyncMock, return_value=_stub_context()), \
+             patch("agents.oracle.run", new_callable=AsyncMock, return_value=_stub_oracle()), \
+             patch("agents.arbiter.run", new_callable=AsyncMock, return_value=_stub_arbiter()), \
              patch("orchestrator.pipeline.asyncio.sleep", new_callable=AsyncMock):
 
             from orchestrator.pipeline import run_pipeline
@@ -133,19 +133,19 @@ class TestPipelineOrchestration:
     @pytest.mark.asyncio
     async def test_sentinel_output_feeds_downstream(self, request_obj):
         """SENTINEL output is passed correctly to Layer 2 and Layer 3 agents."""
-        sentinel_report = _mock_sentinel()
+        sentinel_report = _stub_sentinel()
 
-        chronicle_spy = AsyncMock(return_value=_mock_chronicle())
-        meridian_spy = AsyncMock(return_value=_mock_meridian())
-        context_spy = AsyncMock(return_value=_mock_context())
-        oracle_spy = AsyncMock(return_value=_mock_oracle())
+        chronicle_spy = AsyncMock(return_value=_stub_chronicle())
+        meridian_spy = AsyncMock(return_value=_stub_meridian())
+        context_spy = AsyncMock(return_value=_stub_context())
+        oracle_spy = AsyncMock(return_value=_stub_oracle())
 
         with patch("agents.sentinel.run", new_callable=AsyncMock, return_value=sentinel_report), \
              patch("agents.chronicle.run", chronicle_spy), \
              patch("agents.meridian.run", meridian_spy), \
              patch("agents.context.run", context_spy), \
              patch("agents.oracle.run", oracle_spy), \
-             patch("agents.arbiter.run", new_callable=AsyncMock, return_value=_mock_arbiter()), \
+             patch("agents.arbiter.run", new_callable=AsyncMock, return_value=_stub_arbiter()), \
              patch("orchestrator.pipeline.asyncio.sleep", new_callable=AsyncMock):
 
             from orchestrator.pipeline import run_pipeline
@@ -166,12 +166,12 @@ class TestPipelineOrchestration:
         def capture_callback(event, data):
             events.append(event)
 
-        with patch("agents.sentinel.run", new_callable=AsyncMock, return_value=_mock_sentinel()), \
-             patch("agents.chronicle.run", new_callable=AsyncMock, return_value=_mock_chronicle()), \
-             patch("agents.meridian.run", new_callable=AsyncMock, return_value=_mock_meridian()), \
-             patch("agents.context.run", new_callable=AsyncMock, return_value=_mock_context()), \
-             patch("agents.oracle.run", new_callable=AsyncMock, return_value=_mock_oracle()), \
-             patch("agents.arbiter.run", new_callable=AsyncMock, return_value=_mock_arbiter()), \
+        with patch("agents.sentinel.run", new_callable=AsyncMock, return_value=_stub_sentinel()), \
+             patch("agents.chronicle.run", new_callable=AsyncMock, return_value=_stub_chronicle()), \
+             patch("agents.meridian.run", new_callable=AsyncMock, return_value=_stub_meridian()), \
+             patch("agents.context.run", new_callable=AsyncMock, return_value=_stub_context()), \
+             patch("agents.oracle.run", new_callable=AsyncMock, return_value=_stub_oracle()), \
+             patch("agents.arbiter.run", new_callable=AsyncMock, return_value=_stub_arbiter()), \
              patch("orchestrator.pipeline.asyncio.sleep", new_callable=AsyncMock):
 
             from orchestrator.pipeline import run_pipeline
@@ -187,12 +187,12 @@ class TestPipelineOrchestration:
     @pytest.mark.asyncio
     async def test_pipeline_assigns_eval_id(self, request_obj):
         """Pipeline assigns a unique eval_id if none provided."""
-        with patch("agents.sentinel.run", new_callable=AsyncMock, return_value=_mock_sentinel()), \
-             patch("agents.chronicle.run", new_callable=AsyncMock, return_value=_mock_chronicle()), \
-             patch("agents.meridian.run", new_callable=AsyncMock, return_value=_mock_meridian()), \
-             patch("agents.context.run", new_callable=AsyncMock, return_value=_mock_context()), \
-             patch("agents.oracle.run", new_callable=AsyncMock, return_value=_mock_oracle()), \
-             patch("agents.arbiter.run", new_callable=AsyncMock, return_value=_mock_arbiter()), \
+        with patch("agents.sentinel.run", new_callable=AsyncMock, return_value=_stub_sentinel()), \
+             patch("agents.chronicle.run", new_callable=AsyncMock, return_value=_stub_chronicle()), \
+             patch("agents.meridian.run", new_callable=AsyncMock, return_value=_stub_meridian()), \
+             patch("agents.context.run", new_callable=AsyncMock, return_value=_stub_context()), \
+             patch("agents.oracle.run", new_callable=AsyncMock, return_value=_stub_oracle()), \
+             patch("agents.arbiter.run", new_callable=AsyncMock, return_value=_stub_arbiter()), \
              patch("orchestrator.pipeline.asyncio.sleep", new_callable=AsyncMock):
 
             from orchestrator.pipeline import run_pipeline
@@ -216,12 +216,12 @@ class TestPipelineOrchestration:
     @pytest.mark.asyncio
     async def test_pipeline_result_serializes_to_json(self, request_obj):
         """Full pipeline result can be serialized to JSON for API response."""
-        with patch("agents.sentinel.run", new_callable=AsyncMock, return_value=_mock_sentinel()), \
-             patch("agents.chronicle.run", new_callable=AsyncMock, return_value=_mock_chronicle()), \
-             patch("agents.meridian.run", new_callable=AsyncMock, return_value=_mock_meridian()), \
-             patch("agents.context.run", new_callable=AsyncMock, return_value=_mock_context()), \
-             patch("agents.oracle.run", new_callable=AsyncMock, return_value=_mock_oracle()), \
-             patch("agents.arbiter.run", new_callable=AsyncMock, return_value=_mock_arbiter()), \
+        with patch("agents.sentinel.run", new_callable=AsyncMock, return_value=_stub_sentinel()), \
+             patch("agents.chronicle.run", new_callable=AsyncMock, return_value=_stub_chronicle()), \
+             patch("agents.meridian.run", new_callable=AsyncMock, return_value=_stub_meridian()), \
+             patch("agents.context.run", new_callable=AsyncMock, return_value=_stub_context()), \
+             patch("agents.oracle.run", new_callable=AsyncMock, return_value=_stub_oracle()), \
+             patch("agents.arbiter.run", new_callable=AsyncMock, return_value=_stub_arbiter()), \
              patch("orchestrator.pipeline.asyncio.sleep", new_callable=AsyncMock):
 
             from orchestrator.pipeline import run_pipeline

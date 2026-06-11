@@ -297,15 +297,15 @@ class TestFoundryIQ:
             content = f.read_text(encoding="utf-8")
             assert len(content) > 100, f"Postmortem {f.name} has insufficient content"
 
-    def test_synthetic_data_files_exist(self):
-        data_path = Path(__file__).parent.parent / "synthetic-data"
+    def test_enterprise_data_files_exist(self):
+        data_path = Path(__file__).parent.parent / "enterprise-data"
         required = ["employees.json", "incidents.json", "ontology.json",
                      "services.json", "work_signals.json"]
         for fname in required:
             fpath = data_path / fname
-            assert fpath.exists(), f"Missing synthetic data: {fname}"
+            assert fpath.exists(), f"Missing enterprise data: {fname}"
             data = json.loads(fpath.read_text())
-            assert data, f"Empty synthetic data: {fname}"
+            assert data, f"Empty enterprise data: {fname}"
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

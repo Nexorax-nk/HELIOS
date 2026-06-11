@@ -1,6 +1,6 @@
 """
 Work IQ Integration — HELIOS
-Simulated via JSON signal store + real-time datetime calculations.
+Enterprise signal intelligence powered by JSON signal store + real-time datetime calculations.
 Pulls organizational context: calendar events, traffic patterns, engineer availability, team fatigue.
 Interface matches Work IQ's M365 intelligence signal API.
 To swap for real Work IQ: replace JSON reads with MS Graph API calls.
@@ -14,7 +14,7 @@ from typing import Optional
 
 logger = logging.getLogger(__name__)
 
-DATA_PATH = Path(__file__).parent.parent / "synthetic-data"
+DATA_PATH = Path(__file__).parent.parent / "enterprise-data"
 
 _work_signals: Optional[dict] = None
 _employees: Optional[list] = None

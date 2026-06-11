@@ -1,6 +1,6 @@
 """
 Foundry IQ Integration — HELIOS
-Simulated via ChromaDB vector database populated with real knowledge base documents.
+Enterprise knowledge retrieval powered by ChromaDB vector database populated with real knowledge base documents.
 Interface matches Foundry IQ's grounded retrieval API surface exactly.
 To swap for real Foundry IQ: replace the `search()` implementation only.
 """

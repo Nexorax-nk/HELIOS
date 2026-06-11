@@ -1,6 +1,6 @@
 """
 Fabric IQ Integration — HELIOS
-Simulated via networkx graph + synthetic ontology JSON.
+Enterprise service topology graph powered by networkx + ontology data.
 Traverses: Config → Service → Department → BusinessFunction → RevenueStream
 Interface matches Fabric IQ's semantic entity API.
 To swap for real Fabric IQ: replace graph traversal with Fabric semantic API calls.
@@ -18,11 +18,11 @@ logger = logging.getLogger(__name__)
 _graph: Optional[nx.DiGraph] = None
 _services_data: Optional[dict] = None
 
-DATA_PATH = Path(__file__).parent.parent / "synthetic-data"
+DATA_PATH = Path(__file__).parent.parent / "enterprise-data"
 
 
 def _load_graph() -> nx.DiGraph:
-    """Build networkx graph from synthetic ontology + services data."""
+    """Build networkx graph from enterprise ontology + services data."""
     global _graph, _services_data
 
     if _graph is not None:

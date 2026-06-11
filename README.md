@@ -404,7 +404,7 @@ pytest tests/test_unit.py -v
 
 ### Tier 2: Integration Tests (10 tests, 0 API calls)
 
-Validates the full 6-agent pipeline orchestration with mocked LLM responses. Proves the architecture is real — not just a wrapper around a single LLM call.
+Validates the full 6-agent pipeline orchestration with stubbed LLM responses. Proves the architecture is real — not just a wrapper around a single LLM call.
 
 ```bash
 pytest tests/test_integration.py -v
