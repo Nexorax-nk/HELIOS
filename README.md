@@ -101,7 +101,7 @@ graph TD
 
     %% Entry Point
     Trigger(["⚡ CI/CD Pipeline / GitHub PR / CLI Trigger"]):::input
-    ConfigDoc[/"📄 config_diff.yaml\n+ context (env, author)"/]::data
+    ConfigDoc[/"📄 config_diff.yaml\n+ context (env, author)"/]:::data
 
     Trigger --> ConfigDoc
 
@@ -109,7 +109,7 @@ graph TD
     subgraph L1 ["LAYER 1: SEMANTIC PARSING & UNDERSTANDING"]
         direction TB
         SENTINEL{"👁️ Agent 1: SENTINEL\n(Semantic Engine)"}:::agent
-        SentinelOutput[/"Contextualized Diff\nChange Type: High-Risk"/]::data
+        SentinelOutput[/"Contextualized Diff\nChange Type: High-Risk"/]:::data
     end
 
     ConfigDoc -->|Analyzes| SENTINEL
@@ -139,7 +139,7 @@ graph TD
     FabricIQ <-->|"Graph Traversal\n(Blast Radius)"| MERIDIAN
     WorkIQ <-->|"A2A Protocol\n(Calendar/Fatigue)"| CONTEXT
 
-    EvidencePool[/"Evidence Pool\n- Precedent INC-442\n- $1.2M Revenue at Risk\n- Primary Engineer on PTO"/]::data
+    EvidencePool[/"Evidence Pool\n- Precedent INC-442\n- $1.2M Revenue at Risk\n- Primary Engineer on PTO"/]:::data
 
     CHRONICLE --> EvidencePool
     MERIDIAN --> EvidencePool
@@ -149,7 +149,7 @@ graph TD
     subgraph L3 ["LAYER 3: CROSS-DOMAIN PREDICTION"]
         direction TB
         ORACLE{"🔮 Agent 5: ORACLE\n(Consequence Engine)"}:::agent
-        OracleOutput[/"Predicted Consequence:\nCascading Failure during Peak Hours"/]::data
+        OracleOutput[/"Predicted Consequence:\nCascading Failure during Peak Hours"/]:::data
     end
 
     EvidencePool -->|Synthesizes| ORACLE
@@ -164,7 +164,7 @@ graph TD
     OracleOutput -->|Evaluates Risk vs Tolerance| ARBITER
 
     Verdict{{"🛑 BLOCK DEPLOYMENT\nScore: 92/100"}}:::output
-    Remediation[/"Remediation Plan:\n1. Change timeout to 4s\n2. Deploy outside peak window"/]::data
+    Remediation[/"Remediation Plan:\n1. Change timeout to 4s\n2. Deploy outside peak window"/]:::data
 
     ARBITER --> Verdict
     ARBITER --> Remediation
@@ -618,4 +618,5 @@ HELIOS/
 
 **HELIOS** | Microsoft Agents League Hackathon 2026 | Reasoning Agents Track  
 **Team:** Nexorax
+
 
