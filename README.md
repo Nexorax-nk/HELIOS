@@ -91,64 +91,89 @@ The output is a verdict: **SHIP**, **WARN**, **STAGE**, or **BLOCK** — with fu
 ## Architecture: 6 Agents, 4 Layers, 3 Microsoft IQ Integrations
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontFamily': 'Inter, sans-serif', 'primaryColor': '#080b12', 'primaryTextColor': '#f1f5f9', 'primaryBorderColor': '#1e293b', 'lineColor': '#64748b', 'tertiaryColor': '#0f172a' }}}%%
 graph TD
-    classDef agent fill:#0078d4,stroke:#fff,stroke-width:2px,color:#fff,rx:5px,ry:5px
-    classDef iq fill:#10b981,stroke:#fff,stroke-width:2px,color:#fff,rx:5px,ry:5px
-    classDef input fill:#334155,stroke:#fff,stroke-width:2px,color:#fff,rx:5px,ry:5px
-    classDef output fill:#ef4444,stroke:#fff,stroke-width:2px,color:#fff,rx:5px,ry:5px
+    classDef input fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#f8fafc,rx:8px,ry:8px
+    classDef agent fill:#0f172a,stroke:#8b5cf6,stroke-width:2px,color:#f8fafc,rx:8px,ry:8px
+    classDef iqLayer fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#ecfdf5,rx:8px,ry:8px
+    classDef data fill:#1e293b,stroke:#475569,stroke-width:1px,color:#cbd5e1,stroke-dasharray: 5 5,rx:4px,ry:4px
+    classDef output fill:#450a0a,stroke:#ef4444,stroke-width:2px,color:#fef2f2,rx:8px,ry:8px
 
-    Input[("CONFIG CHANGE\n(PR / CLI / API)")]:::input
+    %% Entry Point
+    Trigger(["⚡ CI/CD Pipeline / GitHub PR / CLI Trigger"]):::input
+    ConfigDoc[/"📄 config_diff.yaml\n+ context (env, author)"/]::data
 
-    subgraph L1 ["LAYER 1: UNDERSTANDING (Sequential)"]
-        A1("Agent 1: SENTINEL\n(Semantic Change)"):::agent
+    Trigger --> ConfigDoc
+
+    %% Layer 1
+    subgraph L1 ["LAYER 1: SEMANTIC PARSING & UNDERSTANDING"]
+        direction TB
+        SENTINEL{"👁️ Agent 1: SENTINEL\n(Semantic Engine)"}:::agent
+        SentinelOutput[/"Contextualized Diff\nChange Type: High-Risk"/]::data
     end
 
-    subgraph L2 ["LAYER 2: EVIDENCE (Parallel)"]
+    ConfigDoc -->|Analyzes| SENTINEL
+    SENTINEL --> SentinelOutput
+
+    %% Layer 2
+    subgraph L2 ["LAYER 2: EVIDENCE GATHERING (Parallel Execution)"]
         direction LR
-        A2("Agent 2: CHRONICLE\n(Historical Evidence)"):::agent
-        A3("Agent 3: MERIDIAN\n(Dependency Mapping)"):::agent
-        A4("Agent 4: CONTEXT\n(Organizational State)"):::agent
+        CHRONICLE{"📚 Agent 2: CHRONICLE\n(Historical Evidence)"}:::agent
+        MERIDIAN{"🗺️ Agent 3: MERIDIAN\n(Dependency Mapping)"}:::agent
+        CONTEXT{"🕐 Agent 4: CONTEXT\n(Organizational State)"}:::agent
     end
 
-    subgraph IQ ["Microsoft IQ Integrations"]
+    SentinelOutput -->|Broadcasts to| CHRONICLE
+    SentinelOutput -->|Broadcasts to| MERIDIAN
+    SentinelOutput -->|Broadcasts to| CONTEXT
+
+    %% Microsoft IQ Integrations
+    subgraph IQ ["MICROSOFT IQ ENTERPRISE INTEGRATIONS"]
         direction LR
-        IQ1[("Foundry IQ\n(Knowledge Base)")]:::iq
-        IQ2[("Fabric IQ\n(Semantic Graph)")]:::iq
-        IQ3[("Work IQ\n(M365 Signals)")]:::iq
+        FoundryIQ[("Foundry IQ\n(Knowledge Base)")]:::iqLayer
+        FabricIQ[("Fabric IQ\n(Semantic Graph)")]:::iqLayer
+        WorkIQ[("Work IQ\n(M365 Signals)")]:::iqLayer
     end
 
-    subgraph L3 ["LAYER 3: CONSEQUENCE (Sequential)"]
-        A5("Agent 5: ORACLE\n(Cross-domain Prediction)"):::agent
+    FoundryIQ <-->|"Vector Search\n(Postmortems)"| CHRONICLE
+    FabricIQ <-->|"Graph Traversal\n(Blast Radius)"| MERIDIAN
+    WorkIQ <-->|"A2A Protocol\n(Calendar/Fatigue)"| CONTEXT
+
+    EvidencePool[/"Evidence Pool\n- Precedent INC-442\n- $1.2M Revenue at Risk\n- Primary Engineer on PTO"/]::data
+
+    CHRONICLE --> EvidencePool
+    MERIDIAN --> EvidencePool
+    CONTEXT --> EvidencePool
+
+    %% Layer 3
+    subgraph L3 ["LAYER 3: CROSS-DOMAIN PREDICTION"]
+        direction TB
+        ORACLE{"🔮 Agent 5: ORACLE\n(Consequence Engine)"}:::agent
+        OracleOutput[/"Predicted Consequence:\nCascading Failure during Peak Hours"/]::data
     end
 
-    subgraph L4 ["LAYER 4: VERDICT (Sequential)"]
-        A6("Agent 6: ARBITER\n(Decision + Remediation)"):::agent
+    EvidencePool -->|Synthesizes| ORACLE
+    ORACLE --> OracleOutput
+
+    %% Layer 4
+    subgraph L4 ["LAYER 4: EXECUTIVE VERDICT"]
+        direction TB
+        ARBITER{"⚖️ Agent 6: ARBITER\n(Decision Engine)"}:::agent
     end
 
-    Output{{"Verdict Report\n(SHIP / WARN / BLOCK)\n+ Exact Fix"}}:::output
+    OracleOutput -->|Evaluates Risk vs Tolerance| ARBITER
 
-    Input --> A1
-    
-    A1 --> A2
-    A1 --> A3
-    A1 --> A4
+    Verdict{{"🛑 BLOCK DEPLOYMENT\nScore: 92/100"}}:::output
+    Remediation[/"Remediation Plan:\n1. Change timeout to 4s\n2. Deploy outside peak window"/]::data
 
-    IQ1 -.->|"Postmortems,\nAdvisories"| A2
-    IQ2 -.->|"Service Topology,\nRevenue Impact"| A3
-    IQ3 -.->|"Calendar,\nFatigue"| A4
+    ARBITER --> Verdict
+    ARBITER --> Remediation
 
-    A2 --> A5
-    A3 --> A5
-    A4 --> A5
-
-    A5 --> A6
-    A6 --> Output
-
-    style L1 fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 5 5
-    style L2 fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 5 5
-    style L3 fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 5 5
-    style L4 fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 5 5
-    style IQ fill:#f0fdf4,stroke:#bbf7d0,stroke-width:2px
+    style L1 fill:#080b12,stroke:#1e293b,stroke-width:2px,rx:10px
+    style L2 fill:#080b12,stroke:#1e293b,stroke-width:2px,rx:10px
+    style L3 fill:#080b12,stroke:#1e293b,stroke-width:2px,rx:10px
+    style L4 fill:#080b12,stroke:#1e293b,stroke-width:2px,rx:10px
+    style IQ fill:#022c22,stroke:#065f46,stroke-width:2px,rx:10px
 ```
 
 - **Layer 1** runs first because all downstream agents depend on SENTINEL's semantic analysis.
