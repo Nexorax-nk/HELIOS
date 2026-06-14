@@ -90,77 +90,65 @@ The output is a verdict: **SHIP**, **WARN**, **STAGE**, or **BLOCK** — with fu
 
 ## Architecture: 6 Agents, 4 Layers, 3 Microsoft IQ Integrations
 
-```
-CONFIG CHANGE (Pull Request / CLI / API)
-         |
-  +------v------+
-  |   HELIOS    |  Pre-deployment intercept
-  +------+------+
-         |
-+---------------------------------------------+
-|  LAYER 1: UNDERSTANDING                     |
-|  Agent 1: SENTINEL                          |
-|  "What changed, and what does it mean?"     |
-|  - Parses diff semantically                 |
-|  - Classifies change type                   |
-|  - Assesses behavioral impact               |
-+--------------------+------------------------+
-                     |
-+---------------------------------------------+
-|  LAYER 2: EVIDENCE        [parallel]        |
-|                                             |
-|  Agent 2: CHRONICLE (Foundry IQ)            |
-|  - Searches postmortems and advisories      |
-|  - Finds historical precedents              |
-|  - Extracts safe operating ranges           |
-|                                             |
-|  Agent 3: MERIDIAN (Fabric IQ)              |
-|  - Traverses dependency graph               |
-|  - Calculates blast radius                  |
-|  - Maps revenue impact                      |
-|                                             |
-|  Agent 4: CONTEXT (Work IQ)                 |
-|  - Reads organizational calendar            |
-|  - Checks engineer availability             |
-|  - Measures team fatigue                    |
-+--------------------+------------------------+
-                     |
-+---------------------------------------------+
-|  LAYER 3: CONSEQUENCE                       |
-|  Agent 5: ORACLE                            |
-|  - Cross-domain impact prediction           |
-|  - Revenue, customer, compliance analysis   |
-|  - Recovery time estimation                 |
-+--------------------+------------------------+
-                     |
-+---------------------------------------------+
-|  LAYER 4: VERDICT                           |
-|  Agent 6: ARBITER                           |
-|  - Synthesizes all 5 agent outputs          |
-|  - Issues SHIP / WARN / STAGE / BLOCK       |
-|  - Generates remediation steps              |
-|  - Recommends safe deployment window        |
-+--------------------+------------------------+
-                     |
-              +------v------+
-              | Verdict     |
-              | Report +    |
-              | Exact Fix   |
-              +-------------+
-```
+```mermaid
+graph TD
+    classDef agent fill:#0078d4,stroke:#fff,stroke-width:2px,color:#fff,rx:5px,ry:5px
+    classDef iq fill:#10b981,stroke:#fff,stroke-width:2px,color:#fff,rx:5px,ry:5px
+    classDef input fill:#334155,stroke:#fff,stroke-width:2px,color:#fff,rx:5px,ry:5px
+    classDef output fill:#ef4444,stroke:#fff,stroke-width:2px,color:#fff,rx:5px,ry:5px
 
-### Execution Flow
+    Input[("CONFIG CHANGE\n(PR / CLI / API)")]:::input
 
-```
-SENTINEL (sequential)
-    |
-    +---> CHRONICLE  \
-    +---> MERIDIAN    |--- Layer 2 runs in parallel
-    +---> CONTEXT    /
-              |
-          ORACLE (sequential, receives all Layer 2 data)
-              |
-          ARBITER (sequential, receives everything)
+    subgraph L1 ["LAYER 1: UNDERSTANDING (Sequential)"]
+        A1("Agent 1: SENTINEL\n(Semantic Change)"):::agent
+    end
+
+    subgraph L2 ["LAYER 2: EVIDENCE (Parallel)"]
+        direction LR
+        A2("Agent 2: CHRONICLE\n(Historical Evidence)"):::agent
+        A3("Agent 3: MERIDIAN\n(Dependency Mapping)"):::agent
+        A4("Agent 4: CONTEXT\n(Organizational State)"):::agent
+    end
+
+    subgraph IQ ["Microsoft IQ Integrations"]
+        direction LR
+        IQ1[("Foundry IQ\n(Knowledge Base)")]:::iq
+        IQ2[("Fabric IQ\n(Semantic Graph)")]:::iq
+        IQ3[("Work IQ\n(M365 Signals)")]:::iq
+    end
+
+    subgraph L3 ["LAYER 3: CONSEQUENCE (Sequential)"]
+        A5("Agent 5: ORACLE\n(Cross-domain Prediction)"):::agent
+    end
+
+    subgraph L4 ["LAYER 4: VERDICT (Sequential)"]
+        A6("Agent 6: ARBITER\n(Decision + Remediation)"):::agent
+    end
+
+    Output{{"Verdict Report\n(SHIP / WARN / BLOCK)\n+ Exact Fix"}}:::output
+
+    Input --> A1
+    
+    A1 --> A2
+    A1 --> A3
+    A1 --> A4
+
+    IQ1 -.->|"Postmortems,\nAdvisories"| A2
+    IQ2 -.->|"Service Topology,\nRevenue Impact"| A3
+    IQ3 -.->|"Calendar,\nFatigue"| A4
+
+    A2 --> A5
+    A3 --> A5
+    A4 --> A5
+
+    A5 --> A6
+    A6 --> Output
+
+    style L1 fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 5 5
+    style L2 fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 5 5
+    style L3 fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 5 5
+    style L4 fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 5 5
+    style IQ fill:#f0fdf4,stroke:#bbf7d0,stroke-width:2px
 ```
 
 - **Layer 1** runs first because all downstream agents depend on SENTINEL's semantic analysis.
