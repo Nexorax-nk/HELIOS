@@ -12,7 +12,7 @@ version: 2.4.1
 environment: production
 
 # Authentication Configuration
-authentication_timeout: 3s     # ← CHANGED from 5s — HELIOS will BLOCK this
+authentication_timeout: 2s     # ← CHANGED from 5s — HELIOS will BLOCK this
 session_token_expiry: 3600s
 max_concurrent_auth_requests: 1200
 
