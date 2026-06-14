@@ -79,6 +79,8 @@ function resetPipeline() {
   // Reset verdict
   document.getElementById('verdictPlaceholder').classList.remove('hidden');
   document.getElementById('verdictResult').classList.add('hidden');
+  const gauge = document.getElementById('gaugeProgress');
+  if (gauge) { gauge.style.strokeDashoffset = '251.2'; gauge.style.stroke = 'var(--text-dim)'; }
 }
 
 // ─── Log Entry ────────────────────────────────────────────────────────────────
@@ -180,7 +182,18 @@ function renderVerdict(pipelineResult) {
   badge.textContent = `${arbiter.verdict_emoji} ${arbiter.verdict}`;
 
   // Score
-  document.getElementById('verdictScore').textContent = arbiter.risk_score;
+    // SVG Gauge Update
+  const score = arbiter.risk_score;
+  document.getElementById('verdictScore').textContent = score;
+  const gauge = document.getElementById('gaugeProgress');
+  if (gauge) {
+    const circumference = 251.2; // 2 * pi * 40
+    const offset = circumference - (score / 100) * circumference;
+    gauge.style.strokeDashoffset = offset;
+    if (score < 40) gauge.style.stroke = 'var(--ship)';
+    else if (score < 70) gauge.style.stroke = 'var(--warn)';
+    else gauge.style.stroke = 'var(--block)';
+  }
   document.getElementById('verdictTime').textContent =
     `Evaluated in ${pipelineResult.execution_time_seconds?.toFixed(1) ?? '?'}s`;
 
@@ -416,3 +429,32 @@ function renderHistory(evaluations) {
   setInterval(checkHealth, 15000);
   await loadHistory();
 })();
+
+// --- Max Level UI: Glow Tracking & 3D Tilt -----------------------------------
+document.addEventListener("mousemove", (e) => {
+  document.querySelectorAll(".card, .agent-card, .arch-card").forEach((card) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty("--mouse-x", ${x}px);
+    card.style.setProperty("--mouse-y", ${y}px);
+  });
+});
+
+document.querySelectorAll(".arch-card").forEach((card) => {
+  card.addEventListener("mousemove", (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -5;
+    const rotateY = ((x - centerX) / centerX) * 5;
+    card.style.transform = perspective(1000px) rotateX(deg) rotateY(deg) translateY(-2px);
+  });
+  card.addEventListener("mouseleave", () => {
+    card.style.transform = perspective(1000px) rotateX(0) rotateY(0) translateY(0);
+  });
+});
+
+
