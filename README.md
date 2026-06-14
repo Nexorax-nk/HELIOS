@@ -101,15 +101,15 @@ graph TD
 
     %% Entry Point
     Trigger(["⚡ CI/CD Pipeline / GitHub PR / CLI Trigger"]):::input
-    ConfigDoc[/"📄 config_diff.yaml\n+ context (env, author)"/]:::data
+    ConfigDoc["📄 config_diff.yaml<br/>+ context (env, author)"]:::data
 
     Trigger --> ConfigDoc
 
     %% Layer 1
     subgraph L1 ["LAYER 1: SEMANTIC PARSING & UNDERSTANDING"]
         direction TB
-        SENTINEL{"👁️ Agent 1: SENTINEL\n(Semantic Engine)"}:::agent
-        SentinelOutput[/"Contextualized Diff\nChange Type: High-Risk"/]:::data
+        SENTINEL("👁️ Agent 1: SENTINEL<br/>(Semantic Engine)"):::agent
+        SentinelOutput["Contextualized Diff<br/>Change Type: High-Risk"]:::data
     end
 
     ConfigDoc -->|Analyzes| SENTINEL
@@ -118,9 +118,9 @@ graph TD
     %% Layer 2
     subgraph L2 ["LAYER 2: EVIDENCE GATHERING (Parallel Execution)"]
         direction LR
-        CHRONICLE{"📚 Agent 2: CHRONICLE\n(Historical Evidence)"}:::agent
-        MERIDIAN{"🗺️ Agent 3: MERIDIAN\n(Dependency Mapping)"}:::agent
-        CONTEXT{"🕐 Agent 4: CONTEXT\n(Organizational State)"}:::agent
+        CHRONICLE("📚 Agent 2: CHRONICLE<br/>(Historical Evidence)"):::agent
+        MERIDIAN("🗺️ Agent 3: MERIDIAN<br/>(Dependency Mapping)"):::agent
+        CONTEXT("🕐 Agent 4: CONTEXT<br/>(Organizational State)"):::agent
     end
 
     SentinelOutput -->|Broadcasts to| CHRONICLE
@@ -130,16 +130,16 @@ graph TD
     %% Microsoft IQ Integrations
     subgraph IQ ["MICROSOFT IQ ENTERPRISE INTEGRATIONS"]
         direction LR
-        FoundryIQ[("Foundry IQ\n(Knowledge Base)")]:::iqLayer
-        FabricIQ[("Fabric IQ\n(Semantic Graph)")]:::iqLayer
-        WorkIQ[("Work IQ\n(M365 Signals)")]:::iqLayer
+        FoundryIQ[("Foundry IQ<br/>(Knowledge Base)")]:::iqLayer
+        FabricIQ[("Fabric IQ<br/>(Semantic Graph)")]:::iqLayer
+        WorkIQ[("Work IQ<br/>(M365 Signals)")]:::iqLayer
     end
 
-    FoundryIQ <-->|"Vector Search\n(Postmortems)"| CHRONICLE
-    FabricIQ <-->|"Graph Traversal\n(Blast Radius)"| MERIDIAN
-    WorkIQ <-->|"A2A Protocol\n(Calendar/Fatigue)"| CONTEXT
+    FoundryIQ <-->|"Vector Search<br/>(Postmortems)"| CHRONICLE
+    FabricIQ <-->|"Graph Traversal<br/>(Blast Radius)"| MERIDIAN
+    WorkIQ <-->|"A2A Protocol<br/>(Calendar/Fatigue)"| CONTEXT
 
-    EvidencePool[/"Evidence Pool\n- Precedent INC-442\n- $1.2M Revenue at Risk\n- Primary Engineer on PTO"/]:::data
+    EvidencePool["Evidence Pool<br/>- Precedent INC-442<br/>- $1.2M Revenue at Risk<br/>- Primary Engineer on PTO"]:::data
 
     CHRONICLE --> EvidencePool
     MERIDIAN --> EvidencePool
@@ -148,8 +148,8 @@ graph TD
     %% Layer 3
     subgraph L3 ["LAYER 3: CROSS-DOMAIN PREDICTION"]
         direction TB
-        ORACLE{"🔮 Agent 5: ORACLE\n(Consequence Engine)"}:::agent
-        OracleOutput[/"Predicted Consequence:\nCascading Failure during Peak Hours"/]:::data
+        ORACLE("🔮 Agent 5: ORACLE<br/>(Consequence Engine)"):::agent
+        OracleOutput["Predicted Consequence:<br/>Cascading Failure during Peak Hours"]:::data
     end
 
     EvidencePool -->|Synthesizes| ORACLE
@@ -158,13 +158,13 @@ graph TD
     %% Layer 4
     subgraph L4 ["LAYER 4: EXECUTIVE VERDICT"]
         direction TB
-        ARBITER{"⚖️ Agent 6: ARBITER\n(Decision Engine)"}:::agent
+        ARBITER("⚖️ Agent 6: ARBITER<br/>(Decision Engine)"):::agent
     end
 
     OracleOutput -->|Evaluates Risk vs Tolerance| ARBITER
 
-    Verdict{{"🛑 BLOCK DEPLOYMENT\nScore: 92/100"}}:::output
-    Remediation[/"Remediation Plan:\n1. Change timeout to 4s\n2. Deploy outside peak window"/]:::data
+    Verdict{("🛑 BLOCK DEPLOYMENT<br/>Score: 92/100")}:::output
+    Remediation["Remediation Plan:<br/>1. Change timeout to 4s<br/>2. Deploy outside peak window"]:::data
 
     ARBITER --> Verdict
     ARBITER --> Remediation
@@ -339,7 +339,7 @@ python cli/helios.py evaluate demo/config_b.yaml --local
 curl -X POST http://localhost:8080/api/v1/evaluate \
   -H "Content-Type: application/json" \
   -d '{
-    "config_diff": "-authentication_timeout: 5s\n+authentication_timeout: 3s",
+    "config_diff": "-authentication_timeout: 5s<br/>+authentication_timeout: 3s",
     "config_file": "auth.yaml",
     "environment": "production"
   }'
@@ -519,7 +519,7 @@ POST /api/v1/evaluate
 Content-Type: application/json
 
 {
-  "config_diff": "-authentication_timeout: 5s\n+authentication_timeout: 3s",
+  "config_diff": "-authentication_timeout: 5s<br/>+authentication_timeout: 3s",
   "config_file": "auth.yaml",
   "environment": "production",
   "deployer_id": "EMP-001"
@@ -618,5 +618,6 @@ HELIOS/
 
 **HELIOS** | Microsoft Agents League Hackathon 2026 | Reasoning Agents Track  
 **Team:** Nexorax
+
 
 
