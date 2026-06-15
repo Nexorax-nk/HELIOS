@@ -55,21 +55,21 @@ if __name__ == "__main__":
         
     try:
         with open(sys.argv[1], "r", encoding="utf-8") as f:
-            lines = f.readlines()
+            content = f.read()
             
-        # The JSON is strictly printed on the last line by helios.py
-        # If there are empty lines at the end, traverse backwards
-        data = None
-        for line in reversed(lines):
-            line = line.strip()
-            if line.startswith('{') and line.endswith('}'):
-                try:
-                    data = json.loads(line)
-                    break
-                except:
-                    pass
-                    
-        if data:
+        # The true JSON result always starts with { and contains "eval_id"
+        # We find the last occurrence of '{' that precedes '"eval_id"'
+        # Or even simpler:
+        json_start = content.find('{\n  "eval_id":')
+        if json_start == -1:
+            json_start = content.find('{"eval_id":')
+            
+        if json_start != -1:
+            # The JSON goes to the end of the file
+            json_str = content[json_start:]
+            # Ensure we only parse until the last closing brace in case of trailing chars
+            json_end = json_str.rfind('}') + 1
+            data = json.loads(json_str[:json_end])
             print(generate_markdown(data))
         else:
             print("## HELIOS Analysis Failed\nCould not parse evaluation results.")
