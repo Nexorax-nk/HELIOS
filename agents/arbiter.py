@@ -32,7 +32,7 @@ async def _call_with_retry(client, model, contents, system_instruction, max_retr
 
 async def run(request: EvaluationRequest, sentinel: SentinelReport, chronicle: ChronicleReport,
               meridian: MeridianReport, context: ContextReport, oracle: OracleReport) -> ArbiterVerdict:
-    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
+    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY", "dummy_fallback_key"))
     model = os.getenv("HELIOS_REASONING_MODEL", "gemini-2.5-flash")
     contents = (f"Config: {sentinel.config_file} -> {request.environment}\n"
                 f"Change: {sentinel.behavior_change}\n"

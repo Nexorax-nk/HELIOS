@@ -31,7 +31,7 @@ async def _call_with_retry(client, model, contents, system_instruction, max_retr
                 return get_mock_response("SENTINEL")
 
 async def run(request: EvaluationRequest) -> SentinelReport:
-    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
+    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY", "dummy_fallback_key"))
     model = os.getenv("HELIOS_REASONING_MODEL", "gemini-2.5-flash")
     
     content = request.get_content()

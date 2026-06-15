@@ -32,7 +32,7 @@ async def _call_with_retry(client, model, contents, system_instruction, max_retr
                 return get_mock_response("MERIDIAN")
 
 async def run(sentinel: SentinelReport) -> MeridianReport:
-    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
+    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY", "dummy_fallback_key"))
     model = os.getenv("HELIOS_REASONING_MODEL", "gemini-2.5-flash")
     blast_data = fabric_iq.get_blast_radius(sentinel.config_file)
     contents = f"Config: {sentinel.config_file}\nChange: {sentinel.behavior_change}\nBlast radius: {blast_data['blast_radius_score']}"

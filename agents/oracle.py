@@ -31,7 +31,7 @@ async def _call_with_retry(client, model, contents, system_instruction, max_retr
                 return get_mock_response("ORACLE")
 
 async def run(sentinel: SentinelReport, chronicle: ChronicleReport, meridian: MeridianReport, context: ContextReport) -> OracleReport:
-    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
+    client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY", "dummy_fallback_key"))
     model = os.getenv("HELIOS_REASONING_MODEL", "gemini-2.5-flash")
     contents = (f"Config: {sentinel.config_file}\nChange: {sentinel.behavior_change}\n"
                 f"Historical risk: {chronicle.historical_risk_signal}\n"
