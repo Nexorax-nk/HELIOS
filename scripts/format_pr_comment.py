@@ -1,6 +1,6 @@
-﻿import sys
+import sys
 
-hardcoded_comment = \"\"\"`	ext
+hardcoded_comment = """```text
 ═══════════════════════════════════════════════════════════
   HELIOS CONFIG SAFETY EVALUATION
   Heuristic Evaluation & Launch Intelligence for Operational Safety
@@ -47,7 +47,7 @@ hardcoded_comment = \"\"\"`	ext
      Network:   43% on cellular / low-bandwidth connections
      Impact:    In-store checkout, Payment Processing,
                 Loyalty Redemption
-     Revenue:   ,000 / hour at peak
+     Revenue:   $125,000 / hour at peak
      Tolerance: ZERO — primary revenue channel
 
   3. DEPLOYMENT CONTEXT  [CONTEXT — Work IQ]
@@ -68,7 +68,7 @@ hardcoded_comment = \"\"\"`	ext
   Affected transactions / hour:    17,200
   Customer-facing error rate:      ~16% of sessions
   Support ticket volume:           +3.8x normal baseline
-  Estimated revenue impact:        .1M over 6-hour window
+  Estimated revenue impact:        $2.1M over 6-hour window
   Recovery time estimate:          4-6 hours
                                    (primary engineer unavailable)
 
@@ -118,6 +118,6 @@ hardcoded_comment = \"\"\"`	ext
 
   github.com/Nexorax-nk/HELIOS
 ═══════════════════════════════════════════════════════════
-`\"\"\"
+```"""
 
 print(hardcoded_comment)
