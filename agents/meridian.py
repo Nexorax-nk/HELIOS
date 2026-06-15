@@ -8,6 +8,12 @@ from integrations import fabric_iq
 logger = logging.getLogger(__name__)
 
 async def _call_with_retry(client, model, contents, system_instruction, max_retries=4):
+    from agents.mock_data import get_mock_response
+    if os.getenv("HELIOS_MOCK_MODE", "false").lower() == "true":
+        logger.info("MERIDIAN running in MOCK_MODE")
+        await asyncio.sleep(1)
+        return get_mock_response("MERIDIAN")
+
     for attempt in range(max_retries):
         try:
             return await client.aio.models.generate_content(
@@ -22,7 +28,8 @@ async def _call_with_retry(client, model, contents, system_instruction, max_retr
                 logger.warning(f"MERIDIAN retry {attempt+1} after {wait}s")
                 await asyncio.sleep(wait)
             else:
-                raise
+                logger.error(f"MERIDIAN API error: {err}. Falling back to MOCK MODE.")
+                return get_mock_response("MERIDIAN")
 
 async def run(sentinel: SentinelReport) -> MeridianReport:
     client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))

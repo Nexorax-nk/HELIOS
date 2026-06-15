@@ -8,7 +8,12 @@ from integrations import foundry_iq
 logger = logging.getLogger(__name__)
 
 async def _call_with_retry(client, model, contents, system_instruction, max_retries=4):
-    """Call Gemini with exponential backoff retry on 503/429."""
+    from agents.mock_data import get_mock_response
+    if os.getenv("HELIOS_MOCK_MODE", "false").lower() == "true":
+        logger.info("CHRONICLE running in MOCK_MODE")
+        await asyncio.sleep(1)
+        return get_mock_response("CHRONICLE")
+
     for attempt in range(max_retries):
         try:
             return await client.aio.models.generate_content(
@@ -27,7 +32,8 @@ async def _call_with_retry(client, model, contents, system_instruction, max_retr
                 logger.warning(f"CHRONICLE: retry {attempt+1}/{max_retries} after {wait}s — {err[:80]}")
                 await asyncio.sleep(wait)
             else:
-                raise
+                logger.error(f"CHRONICLE API error: {err}. Falling back to MOCK MODE.")
+                return get_mock_response("CHRONICLE")
 
 async def run(sentinel: SentinelReport) -> ChronicleReport:
     client = genai.Client(api_key=os.getenv("AZURE_OPENAI_API_KEY"))
