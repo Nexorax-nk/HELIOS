@@ -1,4 +1,4 @@
-import json
+﻿import json
 import sys
 
 def generate_markdown(result):
@@ -6,7 +6,6 @@ def generate_markdown(result):
     verdict = arbiter.get("verdict", "UNKNOWN")
     risk_score = arbiter.get("risk_score", 0)
     
-    # Professional formatting without emojis
     color_map = {
         "SHIP": "Success",
         "WARN": "Warning",
@@ -34,7 +33,7 @@ def generate_markdown(result):
     
     agents = ["sentinel", "chronicle", "meridian", "context", "oracle"]
     for agent in agents:
-        reasoning = arbiter.get(f"reasoning_{agent}", "").replace("\n", " ")
+        reasoning = arbiter.get(f"reasoning_{agent}", "").replace('\n', ' ')
         if reasoning:
             md.append(f"| **{agent.upper()}** | {reasoning} |")
             
@@ -47,7 +46,7 @@ def generate_markdown(result):
             md.append(f"{step.get('step_number')}. **{step.get('action')}**{owner}")
             md.append(f"   *Rationale: {step.get('rationale')}*")
             
-    return "\n".join(md)
+    return '\n'.join(md)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -56,13 +55,21 @@ if __name__ == "__main__":
         
     try:
         with open(sys.argv[1], "r", encoding="utf-8") as f:
-            content = f.read()
+            lines = f.readlines()
             
-        json_start = content.find('{')
-        json_end = content.rfind('}') + 1
-        
-        if json_start != -1 and json_end != -1:
-            data = json.loads(content[json_start:json_end])
+        # The JSON is strictly printed on the last line by helios.py
+        # If there are empty lines at the end, traverse backwards
+        data = None
+        for line in reversed(lines):
+            line = line.strip()
+            if line.startswith('{') and line.endswith('}'):
+                try:
+                    data = json.loads(line)
+                    break
+                except:
+                    pass
+                    
+        if data:
             print(generate_markdown(data))
         else:
             print("## HELIOS Analysis Failed\nCould not parse evaluation results.")
