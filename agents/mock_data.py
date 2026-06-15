@@ -49,7 +49,27 @@ MOCK_ARBITER_JSON = json.dumps({
     "verdict": "BLOCK",
     "verdict_emoji": "🛑",
     "risk_score": 92,
-    "confidence": "HIGH"
+    "confidence": "HIGH",
+    "summary": "This configuration change critically reduces the authentication timeout to an unsafe level. In low-bandwidth network environments, this will result in cascading session expirations and completely lock users out of the platform.",
+    "reasoning_sentinel": "Detected a dangerous reduction in `authentication_timeout` from 5s to 1s, directly impacting the core security and availability layer.",
+    "reasoning_chronicle": "Found identical historical incidents (INC-2847) where a sub-3s timeout caused 22% auth failure rates and an $840k revenue loss.",
+    "reasoning_meridian": "Blast radius covers all 45,000 endpoint terminals, jeopardizing $150k/hr in top-line revenue.",
+    "reasoning_context": "Change proposed during a peak Friday deployment window while the primary network engineer is unavailable.",
+    "reasoning_oracle": "Predicts a massive spike in database reconnects due to cascading timeouts, likely taking down the authentication gateway entirely within 3 hours.",
+    "remediation_steps": [
+        {
+            "step_number": 1,
+            "action": "Revert `authentication_timeout` to minimum safe threshold of 4.5s",
+            "who": "Platform Engineering",
+            "rationale": "Vendor advisory CSA-2024-001 strictly requires 4.5s minimum for mixed-network retail deployments."
+        },
+        {
+            "step_number": 2,
+            "action": "Delay deployment to Monday morning",
+            "who": "Release Manager",
+            "rationale": "Avoid deploying critical network boundary changes right before weekend peak traffic."
+        }
+    ]
 })
 
 def get_mock_response(agent_name: str) -> MockResponse:
